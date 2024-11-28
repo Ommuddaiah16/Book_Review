@@ -1,0 +1,64 @@
+<%- include("partials/header.ejs") %>
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+      <h1>Welcome to the Book List</h1>
+      <p>Discover, Review, and Share Your Favorite Books</p>
+    </div>
+  </section>
+
+<!-- Sort Dropdown -->
+<form method="get" action="/">
+  <label for="sort">Sort by Rating:</label>
+  <select name="sort" id="sort" onchange="this.form.submit()">
+    <option value="rating_desc" <%= sort === 'rating_desc' ? 'selected' : '' %>>Highest to Lowest</option>
+    <option value="rating_asc" <%= sort === 'rating_asc' ? 'selected' : '' %>>Lowest to Highest</option>
+    <option value="" <%= !sort ? 'selected' : '' %>>No Sorting</option>
+  </select>
+</form>
+
+<!-- Display Books -->
+<div class="book-cards">
+  <% books.forEach(book => { %>
+    <div class="book-card">
+      <!-- Left Image (Jumbo style) -->
+      <img class="book-image" src="<%= book.cover_image %>" alt="<%= book.title %>">
+      
+      <!-- Right Text Section -->
+      <div class="book-info">
+        <h2 class="book-title"><%= book.title %></h2>
+        <div class="book-rating">
+          <span><%= book.rating %> </span>⭐
+        </div>
+        <div class="book-comment">
+          <p><strong>Comment:</strong> <%= book.comment %></p>
+          <p><strong>Username:</strong> <%= book.username %></p>
+        </div>
+      </div>
+
+
+      <!-- Delete Button with fixed syntax -->
+      <form action="/delete-book/<%= book.id %>" method="POST" style="display:inline;">
+        <input type="hidden" name="_method" value="DELETE">
+        <button type="submit" class="delete-btn">Delete</button>
+      </form>
+    </div>
+  <% }) %>
+</div>
+
+<!-- Form for Adding a New Book -->
+<h3>Add a New Book</h3>
+<form action="/add-book" method="post">
+  <label for="isbn">ISBN:</label>
+  <input type="text" name="isbn" required>
+  <label for="rating">Rating:</label>
+  <input type="number" name="rating" step="0.1" min="0" max="10" required>
+  <label for="comment">Comment:</label>
+  <textarea name="comment" required></textarea>
+  <label for="username">Your Name:</label>
+  <input type="text" name="username" required>
+  <button type="submit">Add Book</button>
+</form>
+
+<%- include("partials/footer.ejs") %>
